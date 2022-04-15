@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Demo of Plain HTML Consuming WebAPI</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="mainform">
+        <h2>Simple Form Population from API</h2>
+        <button id="buttonGetSampleEntityList">Get List </button>
+        <button id="buttonGetSampleEntity">Get Random Sample Entity</button>
+        <form id="form">
+            <h3>Simple Form</h3>
+            <p id="returnmessage"></p>
+            <label>Property 01: <span>*</span></label>
+            <input type="text" id="prop01" placeholder="Property01" />
+            <label>Property 02: <span>*</span></label>
+            <input type="text" id="prop02" placeholder="Property02" />
+            <label>Property 07:</label>
+            <textarea id="prop07" placeholder="Message......."></textarea>
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {            
+            $("#buttonGetSampleEntityList").click(function () {             
+                $("#returnmessage").empty(); // To empty previous error/success message.
+                // Checking for blank fields.
+                
+                    // Returns successful data submission message when the entered information is stored in database.
+                $.get("http://localhost:5115/api/Sample", {
+                    }, function (data) {
+                        $("#returnmessage").append(JSON.stringify(data)); // Append returned message to message paragraph.
+                        if (data == "Your Query has been received, We will contact you soon.") {
+                            $("#form")[0].reset(); // To reset form fields on success.
+                        }
+                    });                
+            });
+            $("#buttonGetSampleEntity").click(function () {
+                var prop01Value = $("#prop01").val();
+                var prop02Value = $("#prop02").val();
+                var prop07Value = $("#prop07").val();
+
+                $("#returnmessage").empty(); // To empty previous error/success message.
+                // Checking for blank fields.
+
+                // Returns successful data submission message when the entered information is stored in database.
+                $.get("http://localhost:5115/api/Sample/1", {
+                }, function (data) {
+                    $("#returnmessage").append(data); // Append returned message to message paragraph.
+                    console.log(JSON.stringify(data));
+                    if (data) {
+                        $("#prop01").val(data.property01);
+                        $("#prop02").val(data.property02);
+                        $("#prop07").val(data.property07);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
